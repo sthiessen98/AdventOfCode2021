@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class DAY11B {
     public static void main(String[] args){
 
+
         final int SIZE = 10;
 
         File file = new File("src/Inputs/day11.txt");
