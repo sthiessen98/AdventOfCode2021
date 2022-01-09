@@ -46,6 +46,7 @@ public class DAY12A {
                     allPaths.add(currPath);
                 }
 
+
                 else{
                     //Are we in a small cave we've visited before?
                     String[] caves = smallCavesVisited.split(",");
