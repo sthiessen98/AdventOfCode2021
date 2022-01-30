@@ -17,6 +17,7 @@ public class DAY14B {
             //get initial polymer and break into pairs
             //Pairs are stored in map as there are millions of  repeated calculations for identical pairs
             String initialPolymer = sc.nextLine();
+            Character lastChar;
             Map<String, Long> polymerPairs = new HashMap<>();
 
             for(int x =0; x < initialPolymer.length()-1; x++){
@@ -27,7 +28,10 @@ public class DAY14B {
                 }else{
                     polymerPairs.put(newPair, Long.valueOf(1));
                 }
+
             }
+            //Save last character to add at end, as the storage method doesn't account for last character
+            lastChar = initialPolymer.charAt(initialPolymer.length()-1);
 
             //Get Polymer Rules and store in map
             //Skip line first to get to rules
@@ -72,10 +76,35 @@ public class DAY14B {
                 polymerPairs = nextStep;
                 currStep++;
             }
+
+            Map<Character, Long> charMap = new HashMap<>();
+
+            //Count character appearances in polymer pairs
             for(String key: polymerPairs.keySet()) {
-                System.out.println("Key: " + key + ",  Value: " + polymerPairs.get(key));
+                if(!charMap.containsKey(key.charAt(0))){
+                    charMap.put(key.charAt(0), polymerPairs.get(key));
+                }else{
+                    charMap.replace(key.charAt(0), charMap.get(key.charAt(0)) + polymerPairs.get(key));
+                }
+
             }
 
+            //Add last character from initial polymer
+            charMap.replace(lastChar, charMap.get(lastChar) + 1);
+
+            //Find most and least common values for answer
+            Long maxValue = Long.MIN_VALUE;
+            Long minValue = Long.MAX_VALUE;
+            for(Character key: charMap.keySet()){
+                if(charMap.get(key) > maxValue){
+                    maxValue = charMap.get(key);
+                }
+                if(charMap.get(key) < minValue){
+                    minValue = charMap.get(key);
+                }
+            }
+
+            System.out.println(maxValue - minValue);
 
         }catch(Exception e){
             System.out.println(e);
