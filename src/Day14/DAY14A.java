@@ -14,6 +14,7 @@ public class DAY14A {
 
             Scanner sc =new Scanner(file);
 
+            //Load in initial Polymer String
             String template = sc.nextLine();
             Map<String, String> pairs = new HashMap<>();
 
@@ -21,15 +22,18 @@ public class DAY14A {
             sc.nextLine();
 
 
+            //Load in Polymer Pairs
             while(sc.hasNextLine()){
                 String[] strArray = sc.nextLine().split(" -> ");
                 pairs.put(strArray[0],strArray[1]);
             }
 
+            //Load in Polymer Pairs
             for(int i=0; i<STEPS; i++){
                 String nextStep = template;
                 String polymerPair = template.charAt(0) + String.valueOf(template.charAt(0));
                 int totalInserts = 0;
+
 
                 for(int j=1; j<template.length();j++){
                     polymerPair = String.valueOf(polymerPair.charAt(1)) + template.charAt(j);
@@ -68,6 +72,9 @@ public class DAY14A {
                 }
             }
 
+
+
+            //Solution for Part A should be 2321
             System.out.println(maxEntry.getValue() - minEntry.getValue());
 
 
