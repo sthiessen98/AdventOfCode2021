@@ -6,26 +6,41 @@ import java.util.Scanner;
 
 import static java.lang.Math.min;
 
-public class DAY15A {
-
+public class DAY15B {
     public static void main(String[] args){
 
         File file = new File("src/Inputs/day15.txt");
-        final int SIZE = 100;
+        final int SIZE = 500;
 
         try{
 
             Scanner sc =new Scanner(file);
 
+            int[][] weightArray = new int[SIZE/5][SIZE/5];
             Node[][] nodeArray = new Node[SIZE][SIZE];
 
+            //Create weightmap
             int lineCount =0;
             while(sc.hasNextLine()){
                 String[] inputs = sc.nextLine().split("");
                 for(int x=0; x < inputs.length; x++){
-                    nodeArray[lineCount][x] = new Node(Integer.parseInt(inputs[x]));
+                    weightArray[lineCount][x] = Integer.parseInt(inputs[x]);
                 }
                 lineCount++;
+            }
+
+            //Create node map
+            for(int x=0; x < SIZE; x++){
+                for(int y=0; y < SIZE; y++){
+                    int xArea = x/(SIZE/5);
+                    int yArea = y/(SIZE/5);
+
+                    int newWeight = weightArray[x%(SIZE/5)][y%(SIZE/5)] + xArea + yArea;
+                    while(newWeight > 9){
+                        newWeight -= 9;
+                    }
+                    nodeArray[x][y] = new Node(newWeight);
+                }
             }
 
             ArrayList<Node> unvisitedSet = new ArrayList<>();
@@ -54,6 +69,7 @@ public class DAY15A {
 
             //Dijkstras
             while(!unvisitedSet.isEmpty()){
+
                 int smallestDist = Integer.MAX_VALUE;
                 int node = 0;
                 //Choose smallest distance node in unvisted set
@@ -86,7 +102,4 @@ public class DAY15A {
             System.out.println(e);
         }
     }
-
-
-
 }
