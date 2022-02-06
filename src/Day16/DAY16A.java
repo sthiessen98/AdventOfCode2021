@@ -80,7 +80,7 @@ public class DAY16A {
         String versionString = "";
         for (int x = 0; x < 3; x++) {
 
-            if (iterator.getIndex() == start && x==0) {
+            if (iterator.getIndex() == 0 && x==0) {
                 versionString += String.valueOf(iterator.current());
             } else {
                 versionString += String.valueOf(iterator.next());
