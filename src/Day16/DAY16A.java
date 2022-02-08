@@ -9,7 +9,7 @@ public class DAY16A {
     public static void main(String[] args) {
 
         final String zero = "0";
-        File file = new File("src/Inputs/test16.txt");
+        File file = new File("src/Inputs/day16.txt");
 
         try {
 
@@ -70,6 +70,10 @@ public class DAY16A {
         return Integer.parseInt(bin, 2);
     }
 
+    public static Long binToLong(String bin){
+        return Long.parseLong(bin, 2);
+    }
+
     public static int readPacket(StringCharacterIterator iterator, Stack stack) {
 
 
@@ -124,7 +128,7 @@ public class DAY16A {
                     literalValueBin += iterator.next();
                 }
             }
-            int literalValue = binToInt(literalValueBin);
+            Long literalValue = binToLong(literalValueBin);
             System.out.println("literal value = " + literalValue);
 
             //Deal with trailing zeros if a surface level packet
