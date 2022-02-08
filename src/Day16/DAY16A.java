@@ -35,8 +35,8 @@ public class DAY16A {
             Stack<Packet> stack = new Stack<>();
 
             while (iterator.getIndex() <= iterator.getEndIndex()) {
-
                 total += readPacket(iterator, stack);
+                System.out.println("total = " + total);
             }
 
 
@@ -102,29 +102,41 @@ public class DAY16A {
         if(id == 4){
 
             //5-bit value
+            String literalValueBin = "";
             while(String.valueOf(iterator.next()).equals("1")){
                 iterator.previous();
-                String literalValue = "";
+
                 for(int x=0;x<5;x++){
-                    literalValue += iterator.next();
+                    if(x==0){
+                        iterator.next();
+                    }else{
+                        literalValueBin += iterator.next();
+                    }
                 }
-                System.out.println("literal value bin = " + literalValue);
             }
 
             //Last 5 bit value in literal packet
             iterator.previous();
-            String literalValue = "";
             for(int x=0;x<5;x++){
-                literalValue += iterator.next();
+                if(x==0){
+                    iterator.next();
+                }else{
+                    literalValueBin += iterator.next();
+                }
             }
-            System.out.println("literal value bin = " + literalValue);
+            int literalValue = binToInt(literalValueBin);
+            System.out.println("literal value = " + literalValue);
 
-            int trailingZeros = (iterator.getIndex() + 1 - start)%4;
-            for(int x=0;x < 4 - trailingZeros; x++){
-                iterator.next();
+            //Deal with trailing zeros if a surface level packet
+            if(stack.isEmpty()){
+                int trailingZeros = (iterator.getIndex() + 1 - start)%4;
+                for(int x=0;x < 4 - trailingZeros; x++){
+                    iterator.next();
+                }
             }
 
             //End of literal packet
+            System.out.println(" ");
             return version;
         }else{
 
@@ -137,15 +149,39 @@ public class DAY16A {
                     lengthBin += String.valueOf(iterator.next());
                 }
                 int length = binToInt(lengthBin);
-                Packet packet = new Packet(version, id, start, length);
+                System.out.println("length = " + length);
+                Packet packet = new Packet(version, id, iterator.getIndex(), length);
                 stack.push(packet);
+                int subPacketTotal = version;
+                while(iterator.getIndex() < packet.getStartPos() + packet.getLength()){
+                    subPacketTotal += readPacket(iterator, stack);
+                }
+                stack.pop();
+                return subPacketTotal;
             }else{
                 //length type = 1
-                return 0;
+
+                //Find # of subpackets stored
+                String countBin = "";
+                for(int x=0;x<11;x++){
+                    countBin += String.valueOf(iterator.next());
+                }
+                int count = binToInt(countBin);
+                System.out.println("# of subpackets = " + count);
+
+                //Read subpackets
+                Packet packet = new Packet(version, id, iterator.getIndex(), count);
+                stack.push(packet);
+                int subPacketTotal = version;
+                for(int x=0;x<count;x++){
+                    subPacketTotal += readPacket(iterator, stack);
+                }
+                stack.pop();
+
+                return subPacketTotal;
             }
 
         }
-        return 0;
     }
 }
 
