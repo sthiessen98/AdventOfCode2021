@@ -105,10 +105,8 @@ public class DAY16B {
 
         //Determine type of packet
         switch (id) {
-            //Sum Operator Packet
-            case 1:
-                //Operator packet
-                //length type ID
+            case 0:
+                //Sum Operator Packet
                 //length type = 0
                 if (String.valueOf(iterator.next()).equals("0")) {
                     String lengthBin = "";
@@ -139,7 +137,7 @@ public class DAY16B {
                     //Read subpackets
                     Packet packet = new Packet(version, id, iterator.getIndex(), count);
                     stack.push(packet);
-                    int subPacketTotal = version;
+                    int subPacketTotal = 0;
                     for (int x = 0; x < count; x++) {
                         subPacketTotal += readPacket(iterator, stack);
                     }
@@ -147,8 +145,138 @@ public class DAY16B {
 
                     return subPacketTotal;
                 }
-            //Literal Packet
+            case 1:
+                //Product Operator Packet
+                //length type = 0
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    String lengthBin = "";
+                    for (int x = 0; x < 15; x++) {
+                        lengthBin += String.valueOf(iterator.next());
+                    }
+                    int length = binToInt(lengthBin);
+                    System.out.println("length = " + length);
+                    Packet packet = new Packet(version, id, iterator.getIndex(), length);
+                    stack.push(packet);
+                    long subPacketTotal = 1;
+                    while (iterator.getIndex() < packet.getStartPos() + packet.getLength()) {
+                        subPacketTotal *= readPacket(iterator, stack);
+                    }
+                    stack.pop();
+                    return subPacketTotal;
+                } else {
+                    //length type = 1
+
+                    //Find # of subpackets stored
+                    String countBin = "";
+                    for (int x = 0; x < 11; x++) {
+                        countBin += String.valueOf(iterator.next());
+                    }
+                    int count = binToInt(countBin);
+                    System.out.println("# of subpackets = " + count);
+
+                    //Read subpackets
+                    Packet packet = new Packet(version, id, iterator.getIndex(), count);
+                    stack.push(packet);
+                    int subPacketTotal = 1;
+                    for (int x = 0; x < count; x++) {
+                        subPacketTotal *= readPacket(iterator, stack);
+                    }
+                    stack.pop();
+                    return subPacketTotal;
+                }
+            case 2:
+                //Minimum Operator Packet
+                //length type = 0
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    String lengthBin = "";
+                    for (int x = 0; x < 15; x++) {
+                        lengthBin += String.valueOf(iterator.next());
+                    }
+                    int length = binToInt(lengthBin);
+                    System.out.println("length = " + length);
+                    Packet packet = new Packet(version, id, iterator.getIndex(), length);
+                    stack.push(packet);
+                    long minPacket = Long.MAX_VALUE;
+                    while (iterator.getIndex() < packet.getStartPos() + packet.getLength()) {
+                        long newPacket = readPacket(iterator, stack);
+                        if (newPacket < minPacket) {
+                            minPacket = newPacket;
+                        }
+                    }
+                    stack.pop();
+                    return minPacket;
+                } else {
+                    //length type = 1
+
+                    //Find # of subpackets stored
+                    String countBin = "";
+                    for (int x = 0; x < 11; x++) {
+                        countBin += String.valueOf(iterator.next());
+                    }
+                    int count = binToInt(countBin);
+                    System.out.println("# of subpackets = " + count);
+
+                    //Read subpackets
+                    Packet packet = new Packet(version, id, iterator.getIndex(), count);
+                    stack.push(packet);
+                    long minPacket = Long.MAX_VALUE;
+                    for (int x = 0; x < count; x++) {
+                        long newPacket = readPacket(iterator, stack);
+                        if (newPacket < minPacket) {
+                            minPacket = newPacket;
+                        }
+                    }
+                    stack.pop();
+                    return minPacket;
+                }
+            case 3:
+                //Maximum Operator Packet
+                //length type = 0
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    String lengthBin = "";
+                    for (int x = 0; x < 15; x++) {
+                        lengthBin += String.valueOf(iterator.next());
+                    }
+                    int length = binToInt(lengthBin);
+                    System.out.println("length = " + length);
+                    Packet packet = new Packet(version, id, iterator.getIndex(), length);
+                    stack.push(packet);
+                    long maxPacket = Long.MIN_VALUE;
+                    while (iterator.getIndex() < packet.getStartPos() + packet.getLength()) {
+                        long newPacket = readPacket(iterator, stack);
+                        if (newPacket > maxPacket) {
+                            maxPacket = newPacket;
+                        }
+                    }
+                    stack.pop();
+                    return maxPacket;
+                } else {
+                    //length type = 1
+
+                    //Find # of subpackets stored
+                    String countBin = "";
+                    for (int x = 0; x < 11; x++) {
+                        countBin += String.valueOf(iterator.next());
+                    }
+                    int count = binToInt(countBin);
+                    System.out.println("# of subpackets = " + count);
+
+                    //Read subpackets
+                    Packet packet = new Packet(version, id, iterator.getIndex(), count);
+                    stack.push(packet);
+                    long maxPacket = Long.MIN_VALUE;
+                    for (int x = 0; x < count; x++) {
+                        long newPacket = readPacket(iterator, stack);
+                        if (newPacket > maxPacket) {
+                            maxPacket = newPacket;
+                        }
+                    }
+                    stack.pop();
+                    return maxPacket;
+                }
+
             case 4:
+                //Literal Packet
                 //5-bit value
                 String literalValueBin = "";
                 while (String.valueOf(iterator.next()).equals("1")) {
@@ -186,6 +314,87 @@ public class DAY16B {
                 //End of literal packet
                 System.out.println(" ");
                 return literalValue;
+
+            case 5:
+                //Greater Than Operator Packet
+                //length type info doesnt matter, as we can just call readPacket() twice.
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    for (int x = 0; x < 15; x++) {
+                        iterator.next();
+                    }
+                } else {
+                    for (int x = 0; x < 11; x++) {
+                        iterator.next();
+                    }
+                }
+                //Read subpackets
+                Packet packet = new Packet(version, id, iterator.getIndex(), 1);
+                stack.push(packet);
+                long maxPacket = Long.MIN_VALUE;
+                long firstPacket = readPacket(iterator, stack);
+                long secondPacket = readPacket(iterator, stack);
+                int value;
+                if (firstPacket > secondPacket) {
+                    value = 1;
+                } else {
+                    value = 0;
+                }
+                stack.pop();
+                return value;
+
+
+            case 6:
+                //Less Than Operator Packet
+                //length type info doesnt matter, as we can just call readPacket() twice.
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    for (int x = 0; x < 15; x++) {
+                        iterator.next();
+                    }
+                } else {
+                    for (int x = 0; x < 11; x++) {
+                        iterator.next();
+                    }
+                }
+                //Read subpackets
+                Packet newPacket = new Packet(version, id, iterator.getIndex(), 1);
+                stack.push(newPacket);
+                long packet1 = readPacket(iterator, stack);
+                long packet2 = readPacket(iterator, stack);
+                int answer;
+                if (packet1 < packet2) {
+                    answer = 1;
+                } else {
+                    answer = 0;
+                }
+                stack.pop();
+                return answer;
+
+            case 7:
+                //Equal Operator Packet
+                //length type info doesnt matter, as we can just call readPacket() twice.
+                if (String.valueOf(iterator.next()).equals("0")) {
+                    for (int x = 0; x < 15; x++) {
+                        iterator.next();
+                    }
+                } else {
+                    for (int x = 0; x < 11; x++) {
+                        iterator.next();
+                    }
+                }
+                //Read subpackets
+                Packet p = new Packet(version, id, iterator.getIndex(), 1);
+                stack.push(p);
+                long p1 = readPacket(iterator, stack);
+                long p2 = readPacket(iterator, stack);
+                int result;
+                if(p1 == p2){
+                    result = 1;
+                }else{
+                    result = 0;
+                }
+                stack.pop();
+                return result;
+
         }
         return 0;
     }
