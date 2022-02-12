@@ -137,7 +137,7 @@ public class DAY16B {
                     //Read subpackets
                     Packet packet = new Packet(version, id, iterator.getIndex(), count);
                     stack.push(packet);
-                    int subPacketTotal = 0;
+                    long subPacketTotal = 0;
                     for (int x = 0; x < count; x++) {
                         subPacketTotal += readPacket(iterator, stack);
                     }
@@ -177,7 +177,7 @@ public class DAY16B {
                     //Read subpackets
                     Packet packet = new Packet(version, id, iterator.getIndex(), count);
                     stack.push(packet);
-                    int subPacketTotal = 1;
+                    long subPacketTotal = 1;
                     for (int x = 0; x < count; x++) {
                         subPacketTotal *= readPacket(iterator, stack);
                     }
@@ -330,7 +330,6 @@ public class DAY16B {
                 //Read subpackets
                 Packet packet = new Packet(version, id, iterator.getIndex(), 1);
                 stack.push(packet);
-                long maxPacket = Long.MIN_VALUE;
                 long firstPacket = readPacket(iterator, stack);
                 long secondPacket = readPacket(iterator, stack);
                 int value;
@@ -395,6 +394,8 @@ public class DAY16B {
                 stack.pop();
                 return result;
 
+            default:
+                System.err.println("Could not find operator packet type");
         }
         return 0;
     }

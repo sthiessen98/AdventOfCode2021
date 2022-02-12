@@ -9,7 +9,7 @@ public class DAY16A {
     public static void main(String[] args) {
 
         final String zero = "0";
-        File file = new File("src/Inputs/day16.txt");
+        File file = new File("src/Inputs/test16.txt");
 
         try {
 
