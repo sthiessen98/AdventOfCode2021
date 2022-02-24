@@ -5,6 +5,7 @@ import java.text.StringCharacterIterator;
 import java.util.Scanner;
 import java.util.Stack;
 
+//TODO: Clean up code and shorten
 public class DAY16B {
     public static void main(String[] args) {
 

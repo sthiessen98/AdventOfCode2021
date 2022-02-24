@@ -25,4 +25,11 @@ public class Node {
     public void setDepth(int depth) {
         this.depth = depth;
     }
+
+    public Node copy(){
+        int v = this.value;
+        int d = this.depth;
+
+        return new Node(v, d);
+    }
 }
