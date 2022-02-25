@@ -37,9 +37,18 @@ public class DAY19A {
 
             //TODO: Create DFS to rotate and compare beacons to each other.
 
+
+
         }catch(Exception e){
             System.out.println(e);
         }
     }
 
+    public boolean compareScanners(BeaconScanner scanner1, BeaconScanner scanner2){
+
+
+
+        return false;
+    }
 }
+
